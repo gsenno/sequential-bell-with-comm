@@ -24,24 +24,33 @@ class Test(unittest.TestCase):
         poly = BellPolytopeWithOneWayCommunication(SequentialBellPolytope(scenario))
         self.assertTrue(poly.contains(expectedBehaviour.getProbabilityList()))
         
-    def testSingletBetweenAlice1AndBobAndLocalOtherwiseIsInPolytope(self):
+    def testCHSHBetweenAlice1AndBobAndIdentityInAlice2IsInPolytope(self):
         scenario = SequentialBellScenario([[2,2],[2,2]],[2,2])
         alice1blochVectors = [[1,0,0],[0,1,0]]
         alice1Observables = list(map(lambda bloch : createQubitObservable(bloch),alice1blochVectors))
         alice1Effects = list(map(lambda qubitObservable : projectorsForQubitObservable(qubitObservable),alice1Observables))
-    
+        
+        alice2Effects = [[qt.qeye(2),0*qt.qeye(2)],[qt.qeye(2),0*qt.qeye(2)]]
+        
         bobUnBlochVectors = [[-1,-1,0],[-1,1,0]]
         bobObservables=list(map(lambda bloch : createQubitObservable(bloch),bobUnBlochVectors))
         bobEffects = list(map(lambda qubitObservable : projectorsForQubitObservable(qubitObservable),bobObservables))
     
         psi=createMaxEntState(2)
         
-        expectedCorrelations = {((x1,x2),y,(a1,a2),b):int((a2==0))*((qt.tensor(alice1Effects[x1][a1],bobEffects[y][b])*psi*psi.dag()).tr())
-                                for ((x1,x2),y,(a1,a2),b) in scenario.getTuplesOfEvents()}
+        rho=psi*psi.dag()
+        expectedCorrelations={}
+        for x1 in range(2):
+            for a1 in range(2):
+                postMeasrmntState = qt.tensor(alice1Effects[x1][a1],qt.qeye(2))*rho*(qt.tensor(alice1Effects[x1][a1],qt.qeye(2))).dag()
+                for x2,y,a2,b in product(range(2),repeat=4):
+                    expectedCorrelations[(x1,x2),y,(a1,a2),b]=(qt.tensor(alice2Effects[x2][a2],bobEffects[y][b])*
+                                                               postMeasrmntState).tr().real
         expectedBehaviour = Behaviour(scenario,expectedCorrelations)
+                                                    
         poly = BellPolytopeWithOneWayCommunication(SequentialBellPolytope(scenario))
         self.assertTrue(poly.contains(expectedBehaviour.getProbabilityList()))
-    
+        
     def testProjectiveMeasurementsAreSimulable(self):
         scenario = SequentialBellScenario([[2,2],[2,2]],[2,2])
         alice1blochVectors = [[1,0,0],[0,1,0]]
