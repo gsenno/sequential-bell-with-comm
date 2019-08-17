@@ -6,15 +6,18 @@ Created on 16 ago. 2019
 from bellscenario import BellScenario
 
 class SequentialBellScenario(BellScenario):
-    '''
-    classdocs
-    '''
 
 
-    def __init__(self, outputsAliceSequence,numberOfOutputsPerInputBob):
-        self.outputsAliceSequence=outputsAliceSequence
-        self.outputsAlice1=outputsAliceSequence[0]
-        self.outputsAlice2=outputsAliceSequence[1]
+    '''
+    numberOfOutputsPerInputAliceSequence is a list of integers such that 
+    numberOfOutputsPerInputAlice[0][i]==#outputs for input i of the first Alice and
+    equivalently, numberOfOutputsPerInputAlice[1][i] for the second Alice 
+    (numberOfOutputsPerInputBob is as in BellScenario).
+    '''
+    def __init__(self, numberOfOutputsPerInputAliceSequence,numberOfOutputsPerInputBob):
+        self.numberOfOutputsPerInputAliceSequence=numberOfOutputsPerInputAliceSequence
+        self.outputsAlice1=numberOfOutputsPerInputAliceSequence[0]
+        self.outputsAlice2=numberOfOutputsPerInputAliceSequence[1]
         self.numberOfOutputsPerInputBob=numberOfOutputsPerInputBob
         self.tuplesOfEvents = [((x1,x2),y,(a1,a2),b) 
                                for x1 in range(len(self.outputsAlice1))

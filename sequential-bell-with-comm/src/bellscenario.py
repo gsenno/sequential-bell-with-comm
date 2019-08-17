@@ -5,11 +5,12 @@ Created on 16 ago. 2019
 '''
 
 class BellScenario(object):
+    
     '''
-    classdocs
+    numberOfOutputsPerInputAlice is a list of integers such that 
+    numberOfOutputsPerInputAlice[i]==#outputs for Alice's input i 
+    (idem numberOfOutputsPerInputBob).
     '''
-
-
     def __init__(self, numberOfOutputsPerInputAlice,numberOfOutputsPerInputBob):
         self.numberOfOutputsPerInputAlice = numberOfOutputsPerInputAlice
         self.numberOfOutputsPerInputBob = numberOfOutputsPerInputBob
@@ -34,8 +35,3 @@ class BellScenario(object):
     
     def numberOfInputsBob(self):
         return len(self.numberOfOutputsPerInputBob)
-    
-        '''
-        Constructor
-        '''
-        

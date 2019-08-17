@@ -10,7 +10,7 @@ from bellscenario import BellScenario
 
 class Test(unittest.TestCase):
 
-    def testNumberOfVerticesOfChshIs16(self):
+    def testNumberOfLocalVerticesOfChshIs16(self):
         chshPoly = BellPolytope(BellScenario([2,2],[2,2]))
         self.assertEquals(len(chshPoly.getListOfVertices()), 16)
         

@@ -3,7 +3,6 @@ Created on 27 dic. 2018
 
 @author: gsenno
 '''
-from mosek.fusion import *
 import numpy as np
 import picos as pic
 from itertools import product
@@ -11,8 +10,7 @@ from behaviour import Behaviour
 
 class BellPolytope:
     
-    # numberOfOutputsPerInputAlice is a list of integers such that numberOfOutputsPerInputAlice[i]==#outputs for Alice's input i (idem numberOfOutputsPerInputBob).
-    # the lists do not need to be of the same length.
+    # @see BellScenario
     def __init__(self,bellScenario):
         self.bellScenario = bellScenario
     
@@ -93,29 +91,3 @@ class BellPolytope:
         pvalues=np.array(p.value)
         return prob.status=='optimal'
         #return [prob.status,pvalues]
-
-#     def contains(self,dist):
-#         with Model("lo1") as M:
-#             
-#             vertices=list(map(lambda vertice : vertice.getProbabilityList(), self.getListOfVertices()))
-#             # Create variables
-#             bellFunctional = M.variable("func",len(vertices[0]))
-#             localBound = M.variable("bound", 1)
-#     
-#             # Create constraints
-#             vertexNum=0
-#             for vertex in vertices:
-#                 M.constraint('const'+str(vertexNum),Expr.sub(Expr.dot(bellFunctional,vertex),localBound)
-#                              ,Domain.lessThan(0))
-#                 vertexNum+=1
-#                 
-#             M.constraint('norm',Expr.sub(Expr.dot(bellFunctional,dist),localBound),Domain.lessThan(1))
-#             
-#             # Set the objective function to (c^t * x)
-#             M.objective("obj", ObjectiveSense.Maximize, Expr.sub(Expr.dot(bellFunctional,dist),localBound))
-#     
-#             # Solve the problem
-#             M.solve()
-#             result = [M.primalObjValue(),bellFunctional.level(),localBound.level()]
-#             
-#             return result[0]<=result[2]

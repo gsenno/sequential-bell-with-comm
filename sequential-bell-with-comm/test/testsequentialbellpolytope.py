@@ -9,7 +9,7 @@ import qutip as qt
 from itertools import product
 from sequentialbellscenario import SequentialBellScenario
 from behaviour import Behaviour
-from linopttools import createQubitObservable, projectorsForQubitObservable,\
+from qutipauxfunc import createQubitObservable, projectorsForQubitObservable,\
     createMaxEntState
 
 

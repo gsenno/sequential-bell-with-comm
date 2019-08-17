@@ -2,41 +2,26 @@
 '''
 Created on Feb 12, 2019
 
-@author: rravell
+@author: gsenno
 '''
-from mosek.fusion import *
+
 import numpy as np
-import cvxopt as cvx
-import itertools as it
-from _functools import reduce
-from ncpol2sdpa.sdp_relaxation import imap
-from linopttools import *
-import qutip as qt
 from itertools import product
 
 import picos as pic
 
-from math import sqrt
 from bellpolytopewithonewaycomm import BellPolytopeWithOneWayCommunication
 from sequentialbellpolytope import SequentialBellPolytope
 from sequentialbellscenario import SequentialBellScenario
+
 
 def CHSH(A,B):
     #chsh bell op give observables
     return pic.kron(A[0],B[0])+pic.kron(A[0],B[1])+pic.kron(A[1],B[0]) \
             -pic.kron(A[1],B[1])
 
-if __name__ == '__main__':
-    
-     
-    outputsAliceSequence = [[2,2],[2,2]]
-    outputsBob = [2,2]
-    
-           
-    alpha=2.5
-     
-    "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-     
+def findQDistMaximizingCHSH2ForCHSH1ValueOf(alpha):
+ 
     prob=pic.Problem() 
      
     A={}
@@ -79,16 +64,27 @@ if __name__ == '__main__':
      
      
     prob.add_constraint(pic.trace(CHSH(A1,B1)*rho)==alpha)
-     
-    prob.set_objective('max',
-                       pic.trace(CHSH(A2,B1)*rho))
+    
+    prob.set_objective('max',pic.trace(CHSH(A2,B1)*rho))
      
     prob.solve()
 #     
-    dist=[pic.trace(pic.kron(A[x1,x2,a1,a2],B[y,b])*rho).get_value().real
+    return [pic.trace(pic.kron(A[x1,x2,a1,a2],B[y,b])*rho).get_value().real
           for x1,x2,y,a1,a2,b in product(range(2),range(2),range(2),range(2),range(2),range(2))] 
     
-    polytope = BellPolytopeWithOneWayCommunication(SequentialBellPolytope(SequentialBellScenario(outputsAliceSequence,outputsBob)))                
     
-    if not polytope.contains(dist):
+
+if __name__ == '__main__':
+    
+    alpha=2.5
+    qdist = findQDistMaximizingCHSH2ForCHSH1ValueOf(alpha)
+    
+     
+    outputsAliceSequence = [[2,2],[2,2]]
+    outputsBob = [2,2]
+    bellScenario = SequentialBellScenario(outputsAliceSequence,outputsBob)
+    
+    polytope = BellPolytopeWithOneWayCommunication(SequentialBellPolytope(bellScenario))                
+    
+    if not polytope.contains(qdist):
         print('We found a qdist not reproducible with one bit of comm in the sequential scenario!')

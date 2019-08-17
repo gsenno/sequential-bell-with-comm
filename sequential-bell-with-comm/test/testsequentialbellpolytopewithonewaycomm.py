@@ -9,7 +9,7 @@ import numpy as np
 from sequentialbellscenario import SequentialBellScenario
 from behaviour import Behaviour
 from sequentialbellpolytope import SequentialBellPolytope
-from linopttools import createQubitObservable, projectorsForQubitObservable,\
+from qutipauxfunc import createQubitObservable, projectorsForQubitObservable,\
     createMaxEntState
 import qutip as qt
 from itertools import product

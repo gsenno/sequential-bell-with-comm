@@ -7,7 +7,9 @@ from bellpolytope import BellPolytope
 from itertools import product
 from behaviour import Behaviour
 
-#Polytope for bipartite strategies using shared randomness and communication from Bob to Alice.
+'''
+Polytope for bipartite strategies using shared randomness and 1 bit of communication from Bob to Alice.
+'''
 class BellPolytopeWithOneWayCommunication(BellPolytope):
     
     #see bellpolytope.py for description of params
