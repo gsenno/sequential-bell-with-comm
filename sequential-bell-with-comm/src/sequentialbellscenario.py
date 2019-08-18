@@ -24,7 +24,7 @@ class SequentialBellScenario(BellScenario):
                                for x2 in range(len(self.outputsAlice2))
                                for y in range(len(self.numberOfOutputsPerInputBob))
                                for a1 in range(self.outputsAlice1[x1])
-                               for a2 in range(self.outputsAlice1[x2])
+                               for a2 in range(self.outputsAlice2[x2])
                                for b in range(self.numberOfOutputsPerInputBob[y])]
     
     def numberOfInputsAlice1(self):
