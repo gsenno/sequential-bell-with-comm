@@ -26,7 +26,7 @@ if __name__ == '__main__':
     bobOutputs=[2,2]
     scenario = SequentialBellScenario([alice1outputs,alice2outputs],bobOutputs)
    
-    epsilon=7*np.pi/32
+    epsilon=0
     plus=1/np.sqrt(2)*(qt.basis(2, 0)+qt.basis(2, 1))
     minus=1/np.sqrt(2)*(qt.basis(2, 0)-qt.basis(2, 1))
     Kplus=np.cos(epsilon)*plus*plus.dag()+np.sin(epsilon)*minus*minus.dag()
