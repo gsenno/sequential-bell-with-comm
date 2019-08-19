@@ -20,7 +20,7 @@ class SequentialBellPolytope(BellPolytope):
         extendOutputsAlice2 = reduce(lambda x,y : x+y,[self.bellScenario.numberOfInputsAlice1()*[x] for x in self.bellScenario.getNumberOfOutputsPerInputAlice2()],[])
         alice2strategies = [
                                 {
-                                (x1,x2):choiceOfOutputs[self.bellScenario.numberOfInputsAlice1()*x1+x2] 
+                                (x1,x2):choiceOfOutputs[self.bellScenario.numberOfInputsAlice1()*x2+x1] 
                                 for x1,x2 in product(range(self.bellScenario.numberOfInputsAlice1()),range(self.bellScenario.numberOfInputsAlice2()))
                                 }
                             for choiceOfOutputs in product(*[range(numberOfOutputs) for numberOfOutputs in extendOutputsAlice2])

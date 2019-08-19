@@ -8,7 +8,6 @@ Created on Feb 12, 2019
 import numpy as np
 import qutip as qt
 from itertools import product
-from mosek.fusion import *
 
 import picos as pic
 
@@ -59,28 +58,7 @@ if __name__ == '__main__':
                                                            postMeasrmntState).tr().real
     
     expectedBehaviour = Behaviour(scenario,expectedCorrelations)
-    dist=expectedBehaviour.getProbabilityList()
-    
+
     polytope = BellPolytopeWithOneWayCommunication(SequentialBellPolytope(scenario))                
-    vertices = polytope.getListOfVertices()
-    with Model("lo1") as M:
     
-        # Create variable 'x' of length 4
-        x = M.variable("x", len(vertices), Domain.greaterThan(0.0))
-         
-        
-        # Create constraints
-        for prob in range(len(vertices[0])):
-            M.constraint('p('+str(prob)+')',Expr.dot(x,list(map(lambda ver : ver[prob],vertices))),Domain.equalsTo(dist[prob]))
-             
-        M.constraint('norm',Expr.dot(x,np.ones((len(vertices), 1))),Domain.equalsTo(1))
-         
-         
-        # Set the objective function to (c^t * x)
-        M.objective("obj", ObjectiveSense.Maximize, 1)
-        
-        # Solve the problem
-        M.solve()
-        
-        # Get the solution values
-        print(M.getProblemStatus(SolutionType.Basic))
+    print(polytope.contains(expectedBehaviour.getProbabilityList()))

@@ -4,7 +4,7 @@ Created on 5 ago. 2019
 @author: gsenno
 '''
 from bellpolytope import BellPolytope
-from itertools import product
+from itertools import product, islice
 from behaviour import Behaviour
 
 '''
@@ -19,21 +19,21 @@ class BellPolytopeWithOneWayCommunication(BellPolytope):
     def getGeneratorForVertices(self):
         #local vertices
         yield from self.underlyingPolytope.getGeneratorForVertices()
-                
+        
         aliceStrategiesWithComm = [(a1,a2) 
                                    for a1,a2 in product(self.underlyingPolytope.getAliceStrategies(),repeat=2)
                                    if not a1==a2]
-        
+         
         communicationStrgs=[format(i,'0'+str(self.underlyingPolytope.numberOfInputsBob())+'b') 
                             for i in range(1,2**(self.underlyingPolytope.numberOfInputsBob()-1))]
-                                                   
+                                                    
         bobStrategies=[{
                         y:(choiceOfOutputs[y],comm[y]) for y in range(self.underlyingPolytope.numberOfInputsBob())
                         } 
                             for choiceOfOutputs in 
                                 product(*[range(numberOfOutputs) for numberOfOutputs in self.underlyingPolytope.getNumberOfOutputsPerInputBob()])
                             for comm in communicationStrgs]
-        
+         
         yield from (Behaviour(self.underlyingPolytope.getBellScenario(),
                         {
                             (inputsAlice,inputsBob,outputsAliceSequence,outputsBob):
@@ -46,4 +46,3 @@ class BellPolytopeWithOneWayCommunication(BellPolytope):
                               for stgBob in bobStrategies 
                               for pairOfStgsAlice in aliceStrategiesWithComm
                     )
-
