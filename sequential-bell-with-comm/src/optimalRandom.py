@@ -49,6 +49,7 @@ if __name__ == '__main__':
     
     psi=createMaxEntState(2)
     rho=psi*psi.dag()
+    
     expectedCorrelations={}
     for x1,x2,y in product(range(len(alice1outputs)),range(len(alice2outputs)),range(len(bobOutputs))):
         for a1,a2,b in product(range(alice1outputs[x1]),range(alice2outputs[x2]),range(bobOutputs[y])):
