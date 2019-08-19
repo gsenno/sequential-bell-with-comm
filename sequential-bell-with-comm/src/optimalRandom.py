@@ -25,17 +25,14 @@ if __name__ == '__main__':
     alice2outputs=[2,2,3]
     bobOutputs=[2,2]
     scenario = SequentialBellScenario([alice1outputs,alice2outputs],bobOutputs)
-    alice1blochVectors = [[0,0,1]]
-    alice1Observables = list(map(lambda bloch : createQubitObservable(bloch),alice1blochVectors))
-    alice1Effects = list(map(lambda qubitObservable : projectorsForQubitObservable(qubitObservable),alice1Observables))
-    
-    epsilon=7*np.pi/32
+   
+    epsilon=0
     plus=1/np.sqrt(2)*(qt.basis(2, 0)+qt.basis(2, 1))
     minus=1/np.sqrt(2)*(qt.basis(2, 0)-qt.basis(2, 1))
     Kplus=np.cos(epsilon)*plus*plus.dag()+np.sin(epsilon)*minus*minus.dag()
     Kminus=-np.cos(epsilon)*minus*minus.dag()+np.sin(epsilon)*plus*plus.dag()
     
-    alice1Effects.append([Kplus,Kminus])
+    alice1Krauss=[projectorsForQubitObservable(createQubitObservable([0,0,1])),[Kplus,Kminus]]
     
     alice2blochVectors=[[0,0,1],[1,0,0]]
     alice2Observables = list(map(lambda bloch : createQubitObservable(bloch),alice2blochVectors))
@@ -55,8 +52,7 @@ if __name__ == '__main__':
     expectedCorrelations={}
     for x1,x2,y in product(range(2),range(3),range(2)):
         for a1,a2,b in product(range(alice1outputs[x1]),range(alice2outputs[x2]),range(bobOutputs[y])):
-            px1a1=(qt.tensor(alice1Effects[x1][a1].dag()*alice1Effects[x1][a1],qt.qeye(2))*rho).tr()
-            postMeasrmntState = qt.tensor(alice1Effects[x1][a1],qt.qeye(2))*rho*(qt.tensor(alice1Effects[x1][a1],qt.qeye(2))).dag()
+            postMeasrmntState = qt.tensor(alice1Krauss[x1][a1],qt.qeye(2))*rho*(qt.tensor(alice1Krauss[x1][a1],qt.qeye(2))).dag()
             expectedCorrelations[(x1,x2),y,(a1,a2),b]=(qt.tensor(alice2Effects[x2][a2],bobEffects[y][b])*
                                                            postMeasrmntState).tr().real
     
