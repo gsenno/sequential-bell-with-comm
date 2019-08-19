@@ -8,7 +8,6 @@ Created on Feb 12, 2019
 import numpy as np
 import qutip as qt
 from itertools import product
-from mosek.fusion import *
 
 import picos as pic
 
@@ -58,34 +57,7 @@ if __name__ == '__main__':
                                                            postMeasrmntState).tr().real
     
     expectedBehaviour = Behaviour(scenario,expectedCorrelations)
-    dist=expectedBehaviour.getProbabilityList()
-    
-    polytope = BellPolytopeWithOneWayCommunication(SequentialBellPolytope(scenario))                
-    vertices=[ver.getProbabilityList() for ver in polytope.getListOfVertices()]
-    
-    with Model("lo1") as M:
 
-        # Create variables
-        bellFunctional = M.variable("func",len(dist))
-        localBound = M.variable("bound", 1)
+    polytope = BellPolytopeWithOneWayCommunication(SequentialBellPolytope(scenario))                
     
-        # Create constraints
-        vertexNum=0
-        for vertex in vertices:
-            M.constraint('const'+str(vertexNum),Expr.sub(Expr.dot(bellFunctional,vertex),localBound)
-                         ,Domain.lessThan(0))
-            vertexNum+=1
-            
-        M.constraint('norm',Expr.sub(Expr.dot(bellFunctional,dist),localBound),Domain.lessThan(1))
-        
-        # Set the objective function to (c^t * x)
-        M.objective("obj", ObjectiveSense.Maximize, Expr.sub(Expr.dot(bellFunctional,dist),localBound))
-    
-        # Solve the problem
-        M.solve()
-    
-        # Get the solution values
-        print(M.getProblemStatus(SolutionType.Basic))
-        print(M.primalObjValue())
-        print(bellFunctional.level())
-        print(localBound.level())
+    print(polytope.contains(expectedBehaviour.getProbabilityList()))
