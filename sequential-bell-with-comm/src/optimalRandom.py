@@ -26,7 +26,7 @@ if __name__ == '__main__':
     bobOutputs=[2,2]
     scenario = SequentialBellScenario([alice1outputs,alice2outputs],bobOutputs)
    
-    epsilon=0
+    epsilon=7*np.pi/32
     plus=1/np.sqrt(2)*(qt.basis(2, 0)+qt.basis(2, 1))
     minus=1/np.sqrt(2)*(qt.basis(2, 0)-qt.basis(2, 1))
     Kplus=np.cos(epsilon)*plus*plus.dag()+np.sin(epsilon)*minus*minus.dag()
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     
     alice1Krauss=[projectorsForQubitObservable(createQubitObservable([0,0,1])),[Kplus,Kminus]]
     
-    alice2blochVectors=[[0,0,1],[1,0,0]]
+    alice2blochVectors=[[0,0,1]]
     alice2Observables = list(map(lambda bloch : createQubitObservable(bloch),alice2blochVectors))
     alice2Effects = list(map(lambda qubitObservable : projectorsForQubitObservable(qubitObservable),alice2Observables))
     trineAlice2 = [[0,0,1],[np.sin(2*np.pi/3),0,np.cos(2*np.pi/3)],[np.sin(4*np.pi/3),0,np.cos(4*np.pi/3)]]
