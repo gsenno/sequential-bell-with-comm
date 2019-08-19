@@ -26,13 +26,13 @@ if __name__ == '__main__':
     bobOutputs=[2,2]
     scenario = SequentialBellScenario([alice1outputs,alice2outputs],bobOutputs)
    
-    epsilon=0
+    epsilon=7*np.pi/32
     plus=1/np.sqrt(2)*(qt.basis(2, 0)+qt.basis(2, 1))
     minus=1/np.sqrt(2)*(qt.basis(2, 0)-qt.basis(2, 1))
     Kplus=np.cos(epsilon)*plus*plus.dag()+np.sin(epsilon)*minus*minus.dag()
     Kminus=-np.cos(epsilon)*minus*minus.dag()+np.sin(epsilon)*plus*plus.dag()
     
-    alice1Krauss=[projectorsForQubitObservable(createQubitObservable([0,0,1])),[Kplus,Kminus]]
+    alice1Krauss=[projectorsForQubitObservable(createQubitObservable([0,0,1])),projectorsForQubitObservable(createQubitObservable([1,0,0]))]
     
     alice2blochVectors=[[0,0,1],[1,0,0]]
     alice2Observables = list(map(lambda bloch : createQubitObservable(bloch),alice2blochVectors))
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     trineAlice2 = [[0,0,1],[np.sin(2*np.pi/3),0,np.cos(2*np.pi/3)],[np.sin(4*np.pi/3),0,np.cos(4*np.pi/3)]]
     paulies=[qt.sigmax(),qt.sigmay(),qt.sigmaz()]
     alice2Effects.append(list(map(lambda bloch : 
-                           effectForQubitPovm(1/3, sum([paulies[i]*bloch[i] for i in range(0,3)])),trineAlice2)))
+                           effectForQubitPovm(1/3, sum([paulies[i]*bloch[i] for i in range(3)])),trineAlice2)))
     
     mu=np.arctan(np.sin(2*epsilon))
     bobUnBlochVectors = [[np.sin(mu),0,np.cos(mu)],[-np.sin(mu),0,np.cos(mu)]]
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     psi=createMaxEntState(2)
     rho=psi*psi.dag()
     expectedCorrelations={}
-    for x1,x2,y in product(range(2),range(3),range(2)):
+    for x1,x2,y in product(range(len(alice1outputs)),range(len(alice2outputs)),range(len(bobOutputs))):
         for a1,a2,b in product(range(alice1outputs[x1]),range(alice2outputs[x2]),range(bobOutputs[y])):
             postMeasrmntState = qt.tensor(alice1Krauss[x1][a1],qt.qeye(2))*rho*(qt.tensor(alice1Krauss[x1][a1],qt.qeye(2))).dag()
             expectedCorrelations[(x1,x2),y,(a1,a2),b]=(qt.tensor(alice2Effects[x2][a2],bobEffects[y][b])*
