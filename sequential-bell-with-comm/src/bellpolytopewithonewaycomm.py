@@ -4,7 +4,7 @@ Created on 5 ago. 2019
 @author: gsenno
 '''
 from bellpolytope import BellPolytope
-from itertools import product, islice
+from itertools import product
 from behaviour import Behaviour
 
 '''

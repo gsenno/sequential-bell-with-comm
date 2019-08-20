@@ -3,12 +3,8 @@ Created on 9 jul. 2019
 
 @author: gsenno
 '''
-from bellpolytope import BellPolytope
-import cdd as cdd
+
 import numpy as np
-import itertools as it
-from _functools import reduce
-from ncpol2sdpa.sdp_relaxation import imap
 import qutip as qt
 
 def createQubitObservable(unnormalizedBlochVector):

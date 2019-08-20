@@ -9,8 +9,6 @@ import numpy as np
 import qutip as qt
 from itertools import product
 
-import picos as pic
-
 from bellpolytopewithonewaycomm import BellPolytopeWithOneWayCommunication
 from sequentialbellpolytope import SequentialBellPolytope
 from sequentialbellscenario import SequentialBellScenario
