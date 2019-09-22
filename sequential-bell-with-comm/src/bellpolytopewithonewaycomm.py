@@ -12,6 +12,9 @@ Polytope for bipartite strategies using shared randomness and 1 bit of communica
 '''
 class BellPolytopeWithOneWayCommunication(BellPolytope):
     
+    def getBellScenario(self):
+        return self.underlyingPolytope.getBellScenario()
+    
     #see bellpolytope.py for description of params
     def __init__(self, underlyingPolytope):
         self.underlyingPolytope=underlyingPolytope
