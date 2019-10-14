@@ -34,6 +34,11 @@ def findQDistMaximizingCHSH2ForCHSH1ValueOf(alpha):
     for x1,x2 in product(range(2),range(2)):
         prob.add_constraint(sum(A[x1,x2,a1,a2] for a1 in range(2) 
                                                for a2 in range(2))==np.eye(2))
+    
+    #sequential constraints
+    for x1,a1 in product(range(2),range(2)):
+        prob.add_constraint(sum([A[x1,0,a1,a2] for a2 in (0,1)])==sum([A[x1,1,a1,a2] for a2 in (0,1)]))
+    
      
     z0=np.array([[1,0],[0,0]])
     z1=np.array([[0,0],[0,1]])
