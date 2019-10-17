@@ -32,4 +32,6 @@ class SequentialBellPolytope(BellPolytope):
                 for x1,x2 in product(range(self.bellScenario.numberOfInputsAlice1()),range(self.bellScenario.numberOfInputsAlice2()))
                 }
                 for stgAlice1 in alice1strategies for stgAlice2 in alice2strategies]
-        
+    
+    def listOfAliceInputs(self):
+        return self.bellScenario.listOfAliceInputs()
