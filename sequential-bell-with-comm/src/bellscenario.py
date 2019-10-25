@@ -20,6 +20,10 @@ class BellScenario(object):
                                for a in range(self.numberOfOutputsPerInputAlice[x])
                                for b in range(self.numberOfOutputsPerInputBob[y])]
     
+    
+    def listOfAliceInputs(self):
+        return range(len(self.numberOfOutputsPerInputAlice))
+    
     def getTuplesOfEvents(self):
         return self.tuplesOfEvents
     

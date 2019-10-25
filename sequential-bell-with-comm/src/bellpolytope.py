@@ -14,6 +14,9 @@ class BellPolytope:
     def __init__(self,bellScenario):
         self.bellScenario = bellScenario
     
+    def listOfAliceInputs(self):
+        return self.bellScenario.listOfAliceInputs()
+    
     def getBellScenario(self):
         return self.bellScenario
     
