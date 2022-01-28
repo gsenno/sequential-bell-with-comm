@@ -3,6 +3,7 @@ Created on 16 ago. 2019
 
 @author: gsenno
 '''
+from itertools import product
 
 class Behaviour(object):
     
@@ -33,5 +34,16 @@ class Behaviour(object):
         return self.probabilitiesList
     
     
-    
-    
+    def getBipartiteCorrelator(self,inputAlice,inputBob):
+        correlator = 0
+        probDict = self.getProbabilityDictionary()
+        for a,b in product([-1,1],repeat=2):
+            correlator = correlator + a*b*probDict[inputAlice,inputBob,a,b]
+        return correlator
+        
+    def getAliceCorrelator(self,inputAlice):
+        correlator = 0
+        probDict = self.getProbabilityDictionary()
+        for a in product([-1,1],repeat=2):
+            correlator = correlator + a*b*probDict[inputAlice,inputBob,a,b]
+        return correlator

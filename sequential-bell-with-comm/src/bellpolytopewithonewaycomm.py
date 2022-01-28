@@ -39,12 +39,12 @@ class BellPolytopeWithOneWayCommunication(BellPolytope):
          
         yield from (Behaviour(self.underlyingPolytope.getBellScenario(),
                         {
-                            (inputsAlice,inputsBob,outputsAliceSequence,outputsBob):
+                            (inputsAlice,inputsBob,outputsAlice,outputsBob):
                                 int(
                                     (outputsBob==stgBob[inputsBob][0])&
-                                    (outputsAliceSequence==pairOfStgsAlice[int(stgBob[inputsBob][1])][inputsAlice])
+                                    (outputsAlice==pairOfStgsAlice[int(stgBob[inputsBob][1])][inputsAlice])
                                     )
-                            for (inputsAlice,inputsBob,outputsAliceSequence,outputsBob) in self.underlyingPolytope.getTuplesOfEvents()
+                            for (inputsAlice,inputsBob,outputsAlice,outputsBob) in self.underlyingPolytope.getTuplesOfEvents()
                         }) 
                               for stgBob in bobStrategies 
                               for pairOfStgsAlice in aliceStrategiesWithComm

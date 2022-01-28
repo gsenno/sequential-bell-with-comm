@@ -46,12 +46,12 @@ class BellPolytope:
         return self._strategiesGenerator(self.getNumberOfOutputsPerInputBob())
 
     def _strategyToBehaviour(self,stgAlice, stgBob):
-        distribution = {(inputsAlice,inputsBob,outputsAliceSequence,outputsBob):
+        distribution = {(inputsAlice,inputsBob,outputsAlice,outputsBob):
                             int(
-                                (outputsAliceSequence==stgAlice[inputsAlice])&
+                                (outputsAlice==stgAlice[inputsAlice])&
                                 (outputsBob==stgBob[inputsBob])
                                 )
-                        for (inputsAlice,inputsBob,outputsAliceSequence,outputsBob) in self.getTuplesOfEvents()}
+                        for (inputsAlice,inputsBob,outputsAlice,outputsBob) in self.getTuplesOfEvents()}
         return Behaviour(self.bellScenario,distribution)
     
     def getGeneratorForVertices(self):
@@ -87,10 +87,36 @@ class BellPolytope:
     #    prob.add_constraint(pic.sum([p[i] for i in range(N)])==1.0)
         prob.add_constraint(p.T*D==distribution)
      
-        prob.solve(verbose=1)
-    #    print(prob)
+        solution = prob.solve(solver="mosek",verbose=1)
          
         #get optimal variables and reshape
         pvalues=np.array(p.value)
         return prob.status=='optimal'
         #return [prob.status,pvalues]
+        
+    def dualContains(self,distribution):
+    # Tests if the point distribution is inside the convex Hull of the points D
+    # distribution should be a np multidim array
+    # D should be any np multidim array with first index labelling the points of convex set
+    # output is list containing the solver status and the solution 
+    #reshape so we have vectors
+        N=len(distribution)        
+        #define problem
+        prob=pic.Problem()
+        #cerate prob vector
+        s=prob.add_variable('s',N)
+        sl=prob.add_variable('Sl')
+        
+        for v in self.getListOfVertices():
+            vertex=v.getProbabilityList()
+            prob.add_constraint(s.T*vertex-sl <= 0)
+        
+        prob.add_constraint(s.T*distribution-sl <= 1)
+        
+        prob.set_objective('max',s.T*distribution-sl)
+        solution = prob.solve(solver="mosek",verbose=1)
+
+        #get optimal variables and reshape
+        return solution['obj'] <= 0
+        #return [prob.status,pvalues]
+
